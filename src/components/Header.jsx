@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navbar, Nav, Container, Offcanvas } from 'react-bootstrap';
+import { Navbar, Nav, Container, Offcanvas, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -42,6 +42,12 @@ const Header = () => {
               <Nav.Link as={Link} to="/contact" className="text-white fw-semibold">
                 Contacto
               </Nav.Link>
+              <Nav.Link as={Link} to="/login" className="text-white fw-semibold">
+                Iniciar Sesión
+              </Nav.Link>
+              <Nav.Link as={Link} to="/register" className="text-white fw-semibold">
+                Registrarse
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -67,6 +73,12 @@ const Header = () => {
             </Nav.Link>
             <Nav.Link as={Link} to="/contact" onClick={() => setShow(false)}>
               Contacto
+            </Nav.Link>
+            <Nav.Link as={Link} to="/login" onClick={() => setShow(false)}>
+              Iniciar Sesión
+            </Nav.Link>
+            <Nav.Link as={Link} to="/register" onClick={() => setShow(false)}>
+              Registrarse
             </Nav.Link>
           </Nav>
         </Offcanvas.Body>

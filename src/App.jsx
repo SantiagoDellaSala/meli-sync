@@ -3,20 +3,20 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import Analytics from './pages/Analytics';
 import Contact from './pages/Contact';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
-  console.log('Renderizando App...');
-
   return (
     <>
       <Header />
-      <div className="mt-3">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
     </>
   );
 }
