@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Card, Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
+// src/pages/Analytics.jsx
+import { useEffect, useState } from "react";
+import { Container, Row, Col, Card, Spinner, Alert, Table } from "react-bootstrap";
 import {
   LineChart,
   Line,
@@ -8,13 +9,13 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from 'recharts';
-import { getAnalyticsData } from '../services/analyticsService';
+} from "recharts";
+import { getAnalyticsData } from "../services/analyticsService";
 
 const Analytics = () => {
-  const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,11 +23,7 @@ const Analytics = () => {
         const result = await getAnalyticsData();
         setData(result);
       } catch (err) {
-        if (err.response?.status === 401 || err.response?.status === 403) {
-          setError('Debes iniciar sesión para ver tus analíticas.');
-        } else {
-          setError('Error al cargar las analíticas. Intenta más tarde.');
-        }
+        setError("Error al cargar las analíticas.");
       } finally {
         setLoading(false);
       }
@@ -34,28 +31,24 @@ const Analytics = () => {
     fetchData();
   }, []);
 
-  if (loading) {
+  if (loading)
     return (
-      <Container className="text-center py-5">
+      <Container className="py-5 text-center">
         <Spinner animation="border" variant="info" />
         <p className="mt-2">Cargando analíticas...</p>
       </Container>
     );
-  }
 
-  if (error) {
+  if (error)
     return (
-      <Container className="text-center py-5">
-        <Alert variant="danger" className="fw-semibold">
-          {error}
-        </Alert>
+      <Container className="py-5">
+        <Alert variant="danger">{error}</Alert>
       </Container>
     );
-  }
 
   return (
     <Container className="py-5">
-      <h2 className="fw-bold text-center mb-4" style={{ color: '#007096ff' }}>
+      <h2 className="text-center fw-bold mb-4" style={{ color: "#0077b6" }}>
         Panel de Analíticas
       </h2>
 
@@ -64,7 +57,7 @@ const Analytics = () => {
         <Col md={4}>
           <Card
             className="shadow-sm border-0 text-center p-3"
-            style={{ background: 'linear-gradient(135deg, #3ab0ff, #6fffe9)' }}
+            style={{ background: "linear-gradient(135deg, #3ab0ff, #6fffe9)" }}
           >
             <h5 className="text-white fw-semibold">Ventas</h5>
             <h2 className="text-white fw-bold">{data.ventas.toLocaleString()}</h2>
@@ -75,7 +68,7 @@ const Analytics = () => {
         <Col md={4}>
           <Card
             className="shadow-sm border-0 text-center p-3"
-            style={{ background: 'linear-gradient(135deg, #6fffe9, #3ab0ff)' }}
+            style={{ background: "linear-gradient(135deg, #6fffe9, #3ab0ff)" }}
           >
             <h5 className="text-white fw-semibold">Conversiones</h5>
             <h2 className="text-white fw-bold">{data.conversiones}%</h2>
@@ -86,7 +79,7 @@ const Analytics = () => {
         <Col md={4}>
           <Card
             className="shadow-sm border-0 text-center p-3"
-            style={{ background: 'linear-gradient(135deg, #3ab0ff, #6fffe9)' }}
+            style={{ background: "linear-gradient(135deg, #3ab0ff, #6fffe9)" }}
           >
             <h5 className="text-white fw-semibold">Visitas</h5>
             <h2 className="text-white fw-bold">{data.visitas.toLocaleString()}</h2>
@@ -96,8 +89,8 @@ const Analytics = () => {
       </Row>
 
       {/* Gráfico */}
-      <Card className="shadow-sm border-0 p-4">
-        <h5 className="fw-semibold mb-3" style={{ color: '#0077b6' }}>
+      <Card className="shadow-sm border-0 p-4 mb-5">
+        <h5 className="fw-semibold mb-3" style={{ color: "#0077b6" }}>
           Ventas semanales
         </h5>
         <ResponsiveContainer width="100%" height={300}>
@@ -111,10 +104,53 @@ const Analytics = () => {
               dataKey="ventas"
               stroke="#3ab0ff"
               strokeWidth={3}
-              activeDot={{ r: 8, fill: '#6fffe9' }}
+              activeDot={{ r: 8, fill: "#6fffe9" }}
             />
           </LineChart>
         </ResponsiveContainer>
+      </Card>
+
+      {/* Tabla de productos simulados */}
+      <Card className="shadow-sm border-0 p-4">
+        <h5 className="fw-semibold mb-3" style={{ color: "#0077b6" }}>
+          Productos más vendidos
+        </h5>
+        <Table striped hover responsive>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Unidades vendidas</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Smartwatch X200</td>
+              <td>$ 45.000</td>
+              <td>124</td>
+              <td>32</td>
+            </tr>
+            <tr>
+              <td>Auriculares Bluetooth Z3</td>
+              <td>$ 18.000</td>
+              <td>87</td>
+              <td>50</td>
+            </tr>
+            <tr>
+              <td>Mouse Gamer RGB Pro</td>
+              <td>$ 12.500</td>
+              <td>65</td>
+              <td>20</td>
+            </tr>
+            <tr>
+              <td>Teclado Mecánico Alpha</td>
+              <td>$ 28.000</td>
+              <td>40</td>
+              <td>15</td>
+            </tr>
+          </tbody>
+        </Table>
       </Card>
     </Container>
   );
