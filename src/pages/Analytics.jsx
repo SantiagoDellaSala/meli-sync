@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Container, Row, Col, Spinner } from 'react-bootstrap';
+import { Card, Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
 import {
   LineChart,
   Line,
@@ -14,12 +14,22 @@ import { getAnalyticsData } from '../services/analyticsService';
 const Analytics = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getAnalyticsData();
-      setData(result);
-      setLoading(false);
+      try {
+        const result = await getAnalyticsData();
+        setData(result);
+      } catch (err) {
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          setError('Debes iniciar sesión para ver tus analíticas.');
+        } else {
+          setError('Error al cargar las analíticas. Intenta más tarde.');
+        }
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
@@ -29,6 +39,16 @@ const Analytics = () => {
       <Container className="text-center py-5">
         <Spinner animation="border" variant="info" />
         <p className="mt-2">Cargando analíticas...</p>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container className="text-center py-5">
+        <Alert variant="danger" className="fw-semibold">
+          {error}
+        </Alert>
       </Container>
     );
   }
