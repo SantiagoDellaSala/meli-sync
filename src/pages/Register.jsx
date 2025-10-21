@@ -1,42 +1,50 @@
-import { useState } from 'react';
-import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { Container, Card, Form, Button, Alert } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const { register } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     if (!email || !password || !confirmPassword) {
-      setError('Por favor completa todos los campos.');
+      setError("Por favor completa todos los campos.");
       return;
     }
-
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden.');
+      setError("Las contraseñas no coinciden.");
       return;
     }
 
-    // Simulación de registro exitoso
-    console.log('Registro con:', email, password);
-    setError('');
-    navigate('/analytics'); // redirige al dashboard
+    setError("");
+    setLoading(true);
+    try {
+      await register(email, password);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
-      <Card className="p-4 shadow" style={{ maxWidth: '400px', width: '100%' }}>
-        <h3 className="text-center mb-4" style={{ color: '#0096c7' }}>Registrarse</h3>
+    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
+      <Card className="p-4 shadow" style={{ maxWidth: "400px", width: "100%" }}>
+        <h3 className="text-center mb-4" style={{ color: "#0096c7" }}>
+          Registrarse
+        </h3>
 
         {error && <Alert variant="danger">{error}</Alert>}
 
         <Form onSubmit={handleRegister}>
-          <Form.Group className="mb-3" controlId="formEmail">
+          <Form.Group className="mb-3">
             <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
@@ -46,7 +54,7 @@ const Register = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formPassword">
+          <Form.Group className="mb-3">
             <Form.Label>Contraseña</Form.Label>
             <Form.Control
               type="password"
@@ -56,7 +64,7 @@ const Register = () => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formConfirmPassword">
+          <Form.Group className="mb-3">
             <Form.Label>Confirmar Contraseña</Form.Label>
             <Form.Control
               type="password"
@@ -69,12 +77,13 @@ const Register = () => {
           <Button
             type="submit"
             className="w-100"
+            disabled={loading}
             style={{
-              background: 'linear-gradient(135deg, #3ab0ff, #6fffe9)',
-              border: 'none',
+              background: "linear-gradient(135deg, #3ab0ff, #6fffe9)",
+              border: "none",
             }}
           >
-            Registrarse
+            {loading ? "Registrando..." : "Registrarse"}
           </Button>
         </Form>
 

@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Navbar, Nav, Container, Offcanvas, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
   const [show, setShow] = useState(false);
+  const { user, logout } = useAuth();
 
   return (
     <>
-      {/* Navbar principal */}
       <Navbar
         expand="lg"
         variant="dark"
@@ -26,11 +27,8 @@ const Header = () => {
             MeliSync
           </Navbar.Brand>
 
-          {/* Botón hamburguesa para móvil */}
-          <Navbar.Toggle
-            aria-controls="offcanvasNavbar"
-            onClick={() => setShow(true)}
-          />
+          <Navbar.Toggle aria-controls="offcanvasNavbar" onClick={() => setShow(true)} />
+
           <Navbar.Collapse className="d-none d-lg-flex justify-content-end">
             <Nav>
               <Nav.Link as={Link} to="/" className="text-white fw-semibold">
@@ -42,24 +40,33 @@ const Header = () => {
               <Nav.Link as={Link} to="/contact" className="text-white fw-semibold">
                 Contacto
               </Nav.Link>
-              <Nav.Link as={Link} to="/login" className="text-white fw-semibold">
-                Iniciar Sesión
-              </Nav.Link>
-              <Nav.Link as={Link} to="/register" className="text-white fw-semibold">
-                Registrarse
-              </Nav.Link>
+
+              {!user ? (
+                <>
+                  <Nav.Link as={Link} to="/login" className="text-white fw-semibold">
+                    Iniciar Sesión
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/register" className="text-white fw-semibold">
+                    Registrarse
+                  </Nav.Link>
+                </>
+              ) : (
+                <>
+                  <Navbar.Text className="text-white me-3">
+                    Bienvenido, <strong>{user.email}</strong>
+                  </Navbar.Text>
+                  <Button variant="outline-light" size="sm" onClick={logout}>
+                    Salir
+                  </Button>
+                </>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
 
-      {/* Menú lateral (Offcanvas) */}
-      <Offcanvas
-        id="offcanvasNavbar"
-        show={show}
-        onHide={() => setShow(false)}
-        placement="end"
-      >
+      {/* Offcanvas móvil */}
+      <Offcanvas id="offcanvasNavbar" show={show} onHide={() => setShow(false)} placement="end">
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>MeliSync</Offcanvas.Title>
         </Offcanvas.Header>
@@ -74,12 +81,24 @@ const Header = () => {
             <Nav.Link as={Link} to="/contact" onClick={() => setShow(false)}>
               Contacto
             </Nav.Link>
-            <Nav.Link as={Link} to="/login" onClick={() => setShow(false)}>
-              Iniciar Sesión
-            </Nav.Link>
-            <Nav.Link as={Link} to="/register" onClick={() => setShow(false)}>
-              Registrarse
-            </Nav.Link>
+
+            {!user ? (
+              <>
+                <Nav.Link as={Link} to="/login" onClick={() => setShow(false)}>
+                  Iniciar Sesión
+                </Nav.Link>
+                <Nav.Link as={Link} to="/register" onClick={() => setShow(false)}>
+                  Registrarse
+                </Nav.Link>
+              </>
+            ) : (
+              <>
+                <Nav.Link disabled>Bienvenido, {user.email}</Nav.Link>
+                <Button variant="outline-dark" size="sm" onClick={logout}>
+                  Salir
+                </Button>
+              </>
+            )}
           </Nav>
         </Offcanvas.Body>
       </Offcanvas>
