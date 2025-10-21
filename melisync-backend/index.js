@@ -3,10 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const analyticsRoutes = require('./routes/analytics');
+const authRoutes = require('./routes/auth'); // Rutas de login/register
+const { sequelize } = require('./models'); // IMPORTANTE
 
 dotenv.config();
-
-const authRoutes = require('./routes/auth'); // Rutas de login/register
 
 const app = express();
 
@@ -18,6 +18,11 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/analytics', analyticsRoutes);
 
-// Servidor
+// Sincronizar DB y levantar servidor
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
+sequelize.sync() // 🔹 crea las tablas si no existen
+  .then(() => {
+    console.log('Base de datos sincronizada');
+    app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
+  })
+  .catch(err => console.error('Error sincronizando la DB:', err));
