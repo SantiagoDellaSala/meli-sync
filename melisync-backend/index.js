@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const analyticsRoutes = require('./routes/analytics');
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // Rutas
 app.use('/auth', authRoutes);
+app.use('/analytics', analyticsRoutes);
 
 // Servidor
 const PORT = process.env.PORT || 5000;
