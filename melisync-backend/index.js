@@ -5,6 +5,9 @@ const dotenv = require('dotenv');
 const analyticsRoutes = require('./routes/analytics');
 const authRoutes = require('./routes/auth'); // Rutas de login/register
 const { sequelize } = require('./models'); // IMPORTANTE
+const meliWebhookRoutes = require("./routes/meliWebhook");
+const meliRoutes = require("./routes/meli");
+const meliAuthRoutes = require("./routes/meliAuth");
 
 dotenv.config();
 
@@ -17,6 +20,9 @@ app.use(express.json());
 // Rutas
 app.use('/auth', authRoutes);
 app.use('/analytics', analyticsRoutes);
+app.use("/meli", meliRoutes);
+app.use("/meli", meliWebhookRoutes);
+app.use("/meli", meliAuthRoutes);
 
 // Sincronizar DB y levantar servidor
 const PORT = process.env.PORT || 5000;
